@@ -11,8 +11,8 @@ source github/jib/kokoro/docker_setup.sh
 fi
 
 if [ "${KOKORO_JOB_CLUSTER}" = "GCP_UBUNTU_DOCKER" ]; then
-export DOCKER_IP="$(docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(hostname))"
-echo $DOCKER_IP
+export DOCKER_IP="$(/sbin/ip route|awk '/default/ { print $3 }')"
+echo "DOCKER_IP: ${DOCKER_IP}"
 fi
 
 # docker-credential-gcr uses GOOGLE_APPLICATION_CREDENTIALS as the credentials key file
