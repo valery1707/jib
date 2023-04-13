@@ -92,8 +92,7 @@ public class WarCommandTest {
     containerName = output.trim();
 
     // System.setProperty("java.net.preferIPv4Stack", "true");
-    assertThat(
-            getContent(new URL("http://" + System.getenv("DOCKER_HOST_IP") + ":8080/hello")))
+    assertThat(getContent(new URL("http://" + System.getenv("DOCKER_HOST_IP") + ":8080/hello")))
         .isEqualTo("Hello world");
   }
 
