@@ -94,9 +94,7 @@ public class WarCommandTest {
                 "--rm",
                 "--detach",
                 "-p8080:8080",
-                "exploded-war",
-                "--privileged",
-                "--network=host")
+                "exploded-war")
             .run();
     containerName = output.trim();
 
@@ -163,7 +161,7 @@ public class WarCommandTest {
         System.out.println("Using proxy: " + connection.usingProxy());
         System.out.println("Accept: " + connection.getRequestProperty("Accept"));
         System.out.println("Authorization: " + connection.getRequestProperty("Authorization"));
-        System.out.println("Content: " + connection.getContent().toString());
+        System.out.println("Response: " + connection.getResponseMessage());
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
           try (InputStream in = connection.getInputStream()) {
             return Blobs.writeToString(Blobs.from(in));
