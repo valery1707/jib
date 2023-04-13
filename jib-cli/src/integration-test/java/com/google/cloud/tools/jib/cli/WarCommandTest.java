@@ -140,7 +140,7 @@ public class WarCommandTest {
             .run();
     containerName = output.trim();
 
-    assertThat(getContent(new URL("http://" + dockerHost + ":8080/hello")))
+    assertThat(getContent(new URL("http://" + System.getenv("DOCKER_HOST_IP") + ":8080/hello")))
         .isEqualTo("Hello world");
   }
 
