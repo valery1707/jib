@@ -91,6 +91,7 @@ public class WarCommandTest {
         new Command("docker", "run", "--rm", "--detach", "-p8080:8080", "exploded-war").run();
     containerName = output.trim();
 
+    System.setProperty("java.net.preferIPv4Stack" , "true");
     assertThat(getContent(new URL("http://" + dockerHost + ":8080/hello")))
         .isEqualTo("Hello world");
   }
@@ -149,6 +150,7 @@ public class WarCommandTest {
       Thread.sleep(500);
       try {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        // connection.setRequestProperty("Host", );
         System.out.println("Request method: " + connection.getRequestMethod());
         System.out.println("Permission: " + connection.getPermission().toString());
         System.out.println("Using proxy: " + connection.usingProxy());
