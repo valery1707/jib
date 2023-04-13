@@ -150,9 +150,7 @@ public class WarCommandTest {
       Thread.sleep(500);
       try {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setInstanceFollowRedirects(false);
-        // connection.setRequestProperty("Accept", "*/*");
-        // connection.setRequestProperty("Host", url.getHost());
+        // connection.setInstanceFollowRedirects(false);
         System.out.println("Accept: " + connection.getRequestProperty("Accept"));
         System.out.println("Host: " + connection.getRequestProperty("Host"));
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
