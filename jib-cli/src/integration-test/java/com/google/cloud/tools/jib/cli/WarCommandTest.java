@@ -147,6 +147,7 @@ public class WarCommandTest {
 
   @Nullable
   private static String getContent(URL url) throws InterruptedException {
+    System.out.println("URL: " + url);
     for (int i = 0; i < 40; i++) {
       Thread.sleep(500);
       try {
