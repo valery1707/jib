@@ -150,6 +150,9 @@ public class WarCommandTest {
       Thread.sleep(500);
       try {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setInstanceFollowRedirects(false);
+        connection.setRequestProperty("Accept", "*/*");
+        connection.setRequestProperty("Host", url.getHost());
         // connection.setRequestProperty("Host", );
         // System.setProperty("sun.net.inetaddr.ttl", "0");
         // System.setProperty("sun.net.inetaddr.negative.ttl", "0");
