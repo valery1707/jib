@@ -91,8 +91,7 @@ public class LocalRegistry extends ExternalResource {
         authenticationVolume = "/home/docker/auth:/auth";
       } else if (System.getenv("KOKORO_JOB_CLUSTER") != null
           && System.getenv("KOKORO_JOB_CLUSTER").equals("GCP_UBUNTU_DOCKER")) {
-        authenticationVolume = Paths.get(System.getProperty("user.home"), "auth") + ":/auth";
-        System.out.println("authenticationVolume: " + authenticationVolume);
+        authenticationVolume = "/tmpfs/auth:/auth";
       }
       // Run the Docker registry
       dockerTokens.addAll(

@@ -13,6 +13,9 @@ fi
 if [ "${KOKORO_JOB_CLUSTER}" = "GCP_UBUNTU_DOCKER" ]; then
 export DOCKER_IP="$(/sbin/ip route|awk '/default/ { print $3 }')"
 echo "DOCKER_IP: ${DOCKER_IP}"
+echo "${DOCKER_IP} localhost" >> /etc/hosts
+mkdir /tmpfs/auth
+docker run --entrypoint htpasswd httpd:2 -Bbn testuser testpassword > /tmpfs/auth/htpasswd
 fi
 
 # docker-credential-gcr uses GOOGLE_APPLICATION_CREDENTIALS as the credentials key file
