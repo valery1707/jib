@@ -161,6 +161,7 @@ public class WarCommandTest {
         System.out.println("Using proxy: " + connection.usingProxy());
         System.out.println("Accept: " + connection.getRequestProperty("Accept"));
         System.out.println("Authorization: " + connection.getRequestProperty("Authorization"));
+        System.out.println("Host: " + connection.getRequestProperty("Host"));
         System.out.println("Response: " + connection.getResponseMessage());
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
           try (InputStream in = connection.getInputStream()) {
