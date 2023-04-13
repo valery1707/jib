@@ -151,20 +151,10 @@ public class WarCommandTest {
       try {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setInstanceFollowRedirects(false);
-        connection.setRequestProperty("Accept", "*/*");
+        // connection.setRequestProperty("Accept", "*/*");
         connection.setRequestProperty("Host", url.getHost());
-        // connection.setRequestProperty("Host", );
-        // System.setProperty("sun.net.inetaddr.ttl", "0");
-        // System.setProperty("sun.net.inetaddr.negative.ttl", "0");
-        // System.out.println(Security.getProperty("networkaddress.cache.negative.ttl"));
-        // System.out.println(System.getProperty("sun.net.inetaddr.negative.ttl"));
-        System.out.println("Request method: " + connection.getRequestMethod());
-        System.out.println("Permission: " + connection.getPermission().toString());
-        System.out.println("Using proxy: " + connection.usingProxy());
         System.out.println("Accept: " + connection.getRequestProperty("Accept"));
-        System.out.println("Authorization: " + connection.getRequestProperty("Authorization"));
         System.out.println("Host: " + connection.getRequestProperty("Host"));
-        System.out.println("Content-type: " + connection.getRequestProperty("Content-type"));
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
           try (InputStream in = connection.getInputStream()) {
             return Blobs.writeToString(Blobs.from(in));
