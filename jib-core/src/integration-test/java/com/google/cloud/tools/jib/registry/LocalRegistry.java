@@ -57,10 +57,6 @@ public class LocalRegistry extends ExternalResource {
     this.password = password;
   }
 
-  public String getDockerHost() {
-    return dockerHost;
-  }
-
   /** Starts the local registry. */
   @Override
   protected void before() throws IOException, InterruptedException {

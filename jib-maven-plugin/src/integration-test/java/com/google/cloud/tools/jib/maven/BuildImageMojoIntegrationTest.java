@@ -230,7 +230,7 @@ public class BuildImageMojoIntegrationTest {
       throws VerificationException, IOException, InterruptedException {
     Verifier verifier = new Verifier(simpleTestProject.getProjectRoot().toString());
     verifier.setSystemProperty("jib.useOnlyProjectCache", "true");
-    verifier.setSystemProperty("_DOCKER_HOST", localRegistry.getDockerHost());
+    verifier.setSystemProperty("_DOCKER_HOST", getDockerHost());
     verifier.setSystemProperty("_TARGET_IMAGE", imageReference);
     verifier.setSystemProperty("_TARGET_USERNAME", "testuser");
     verifier.setSystemProperty("_TARGET_PASSWORD", "testpassword");
@@ -670,14 +670,16 @@ public class BuildImageMojoIntegrationTest {
   public void testExecute_jettyServlet25()
       throws VerificationException, IOException, InterruptedException {
     buildAndRunWebApp(servlet25Project, "jetty-servlet25:maven", "pom.xml");
-    HttpGetVerifier.verifyBody("Hello world", new URL("http://" + getDockerHost() + ":8080/hello"));
+    HttpGetVerifier.verifyBody(
+        "Hello world", new URL("http://" + getDockerHostForHttp() + ":8080/hello"));
   }
 
   @Test
   public void testExecute_tomcatServlet25()
       throws VerificationException, IOException, InterruptedException {
     buildAndRunWebApp(servlet25Project, "tomcat-servlet25:maven", "pom-tomcat.xml");
-    HttpGetVerifier.verifyBody("Hello world", new URL("http://" + getDockerHost() + ":8080/hello"));
+    HttpGetVerifier.verifyBody(
+        "Hello world", new URL("http://" + getDockerHostForHttp() + ":8080/hello"));
   }
 
   @Test
@@ -698,7 +700,8 @@ public class BuildImageMojoIntegrationTest {
     int fileSize = Integer.parseInt(sizeOutput.substring(0, sizeOutput.indexOf(' ')));
     assertThat(fileSize).isLessThan(3000); // should not be a large fat jar
 
-    HttpGetVerifier.verifyBody("Hello world", new URL("http://" + getDockerHost() + ":8080"));
+    HttpGetVerifier.verifyBody(
+        "Hello world", new URL("http://" + getDockerHostForHttp() + ":8080"));
   }
 
   @Test
@@ -800,6 +803,10 @@ public class BuildImageMojoIntegrationTest {
   }
 
   private static String getDockerHost() {
+    return System.getenv("DOCKER_IP") != null ? System.getenv("DOCKER_IP") : "localhost";
+  }
+
+  private static String getDockerHostForHttp() {
     if (System.getenv("KOKORO_JOB_CLUSTER") != null
         && System.getenv("KOKORO_JOB_CLUSTER").equals("MACOS_EXTERNAL")) {
       return System.getenv("DOCKER_IP");
