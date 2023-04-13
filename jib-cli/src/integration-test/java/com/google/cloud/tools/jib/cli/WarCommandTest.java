@@ -28,7 +28,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.Security;
 import javax.annotation.Nullable;
 import org.junit.After;
 import org.junit.ClassRule;
@@ -92,7 +91,7 @@ public class WarCommandTest {
         new Command("docker", "run", "--rm", "--detach", "-p8080:8080", "exploded-war").run();
     containerName = output.trim();
 
-    assertThat(getContent(new URL("http://" + dockerHost + ":8080/hello")))
+    assertThat(getContent(new URL("http://" + System.getenv("DOCKER_HOST_IP") + ":8080/hello")))
         .isEqualTo("Hello world");
   }
 
@@ -140,28 +139,27 @@ public class WarCommandTest {
             .run();
     containerName = output.trim();
 
-    assertThat(getContent(new URL("http://" + System.getenv("DOCKER_HOST_IP") + ":8080/hello")))
+    assertThat(getContent(new URL("http://" + dockerHost + ":8080/hello")))
         .isEqualTo("Hello world");
   }
 
   @Nullable
   private static String getContent(URL url) throws InterruptedException {
-    System.out.println("URL: " + url);
     for (int i = 0; i < 40; i++) {
+      System.out.println("URL: " + url);
       Thread.sleep(500);
       try {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         // connection.setRequestProperty("Host", );
-        System.setProperty("sun.net.inetaddr.ttl", "0");
-        System.setProperty("sun.net.inetaddr.negative.ttl", "0");
-        System.out.println(Security.getProperty("networkaddress.cache.negative.ttl"));
-        System.out.println(System.getProperty("sun.net.inetaddr.negative.ttl"));
+        // System.setProperty("sun.net.inetaddr.ttl", "0");
+        // System.setProperty("sun.net.inetaddr.negative.ttl", "0");
+        // System.out.println(Security.getProperty("networkaddress.cache.negative.ttl"));
+        // System.out.println(System.getProperty("sun.net.inetaddr.negative.ttl"));
         System.out.println("Request method: " + connection.getRequestMethod());
         System.out.println("Permission: " + connection.getPermission().toString());
         System.out.println("Using proxy: " + connection.usingProxy());
         System.out.println("Accept: " + connection.getRequestProperty("Accept"));
         System.out.println("Authorization: " + connection.getRequestProperty("Authorization"));
-        System.out.println("Host: " + connection.getRequestProperty("Host"));
         System.out.println("Host: " + connection.getRequestProperty("Host"));
         System.out.println("Content-type: " + connection.getRequestProperty("Content-type"));
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
