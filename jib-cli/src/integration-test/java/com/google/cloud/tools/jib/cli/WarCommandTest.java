@@ -91,7 +91,7 @@ public class WarCommandTest {
         new Command("docker", "run", "--rm", "--detach", "-p8080:8080", "exploded-war").run();
     containerName = output.trim();
 
-    System.setProperty("java.net.preferIPv4Stack" , "true");
+    System.setProperty("java.net.preferIPv4Stack", "true");
     assertThat(getContent(new URL("http://" + dockerHost + ":8080/hello")))
         .isEqualTo("Hello world");
   }
