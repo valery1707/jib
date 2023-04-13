@@ -37,8 +37,6 @@ import picocli.CommandLine;
 public class WarCommandTest {
 
   @ClassRule public static final TestProject servletProject = new TestProject("warTest");
-  private final String dockerHost =
-      System.getenv("DOCKER_IP") != null ? System.getenv("DOCKER_IP") : "localhost";
 
   @Nullable private String containerName;
 
@@ -91,7 +89,7 @@ public class WarCommandTest {
         new Command("docker", "run", "--rm", "--detach", "-p8080:8080", "exploded-war").run();
     containerName = output.trim();
 
-    assertThat(getContent(new URL("http://" + System.getenv("DOCKER_HOST_IP") + ":8080/hello")))
+    assertThat(getContent(new URL("http://" + getDockerHost() + ":8080/hello")))
         .isEqualTo("Hello world");
   }
 
@@ -114,7 +112,7 @@ public class WarCommandTest {
             .run();
     containerName = output.trim();
 
-    assertThat(getContent(new URL("http://" + dockerHost + ":8080/hello")))
+    assertThat(getContent(new URL("http://" + getDockerHost() + ":8080/hello")))
         .isEqualTo("Hello world");
   }
 
@@ -139,7 +137,7 @@ public class WarCommandTest {
             .run();
     containerName = output.trim();
 
-    assertThat(getContent(new URL("http://" + dockerHost + ":8080/hello")))
+    assertThat(getContent(new URL("http://" + getDockerHost() + ":8080/hello")))
         .isEqualTo("Hello world");
   }
 
@@ -150,19 +148,27 @@ public class WarCommandTest {
       Thread.sleep(500);
       try {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        // connection.setInstanceFollowRedirects(false);
-        System.out.println("Accept: " + connection.getRequestProperty("Accept"));
-        System.out.println("Host: " + connection.getRequestProperty("Host"));
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
           try (InputStream in = connection.getInputStream()) {
             return Blobs.writeToString(Blobs.from(in));
           }
         }
       } catch (IOException ignored) {
-        System.out.println(ignored.getMessage());
         // ignored
       }
     }
     return null;
+  }
+
+  private String getDockerHost() {
+    if (System.getenv("KOKORO_JOB_CLUSTER") != null
+        && System.getenv("KOKORO_JOB_CLUSTER").equals("MACOS_EXTERNAL")) {
+      return System.getenv("DOCKER_IP");
+    } else if (System.getenv("KOKORO_JOB_CLUSTER") != null
+        && System.getenv("KOKORO_JOB_CLUSTER").equals("GCP_UBUNTU_DOCKER")) {
+      return System.getenv("DOCKER_HOST_IP");
+    } else {
+      return "localhost";
+    }
   }
 }
