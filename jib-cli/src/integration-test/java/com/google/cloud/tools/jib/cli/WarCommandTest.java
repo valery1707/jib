@@ -158,18 +158,19 @@ public class WarCommandTest {
       Thread.sleep(500);
       try {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setInstanceFollowRedirects(false);
         System.out.println("Request method: " + connection.getRequestMethod());
         System.out.println("Permission: " + connection.getPermission().toString());
         System.out.println("Using proxy: " + connection.usingProxy());
         System.out.println("Accept: " + connection.getRequestProperty("Accept"));
         System.out.println("Authorization: " + connection.getRequestProperty("Authorization"));
+        System.out.println("Content: " + connection.getContent().toString());
         if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
           try (InputStream in = connection.getInputStream()) {
             return Blobs.writeToString(Blobs.from(in));
           }
         }
       } catch (IOException ignored) {
+        ignored.printStackTrace();
         // ignored
       }
     }
