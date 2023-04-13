@@ -88,14 +88,7 @@ public class WarCommandTest {
             .execute("war", "--target", "docker://exploded-war", warPath.toString());
     assertThat(exitCode).isEqualTo(0);
     String output =
-        new Command(
-                "docker",
-                "run",
-                "--rm",
-                "--detach",
-                "-p8080:8080",
-                "exploded-war")
-            .run();
+        new Command("docker", "run", "--rm", "--detach", "-p8080:8080", "exploded-war").run();
     containerName = output.trim();
 
     assertThat(getContent(new URL("http://" + dockerHost + ":8080/hello")))
