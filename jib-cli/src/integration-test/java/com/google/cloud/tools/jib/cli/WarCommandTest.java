@@ -155,6 +155,7 @@ public class WarCommandTest {
         }
       } catch (IOException ignored) {
         // ignored
+        ignored.printStackTrace();
       }
     }
     return null;
